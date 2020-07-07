@@ -7,7 +7,7 @@ Run - Should run as https://localhost:44380/api/report or http://localhost:38106
 ==Testing CERTIFY.me Webhook Reporting API===
 
 Using NGROK 
-ngrok http 44380 -host-header="localhost:44380"
+ngrok http 38106 -host-header="localhost:38106"
 Access with external proxy url. Ex: https://ed3b6f3d700d.ngrok.io/api/report
 
 Using POSTMAN
