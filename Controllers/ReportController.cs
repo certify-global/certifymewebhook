@@ -31,16 +31,17 @@ namespace CERTIFYWebHookAPI.Controllers
                 if (Request != null && Request.Headers.Contains("HMAC"))//Validate for HMAC Value recieved from the Certify.me Webhook
                 {
                     var key = Request.Headers.GetValues("HMAC").First();
-                    if (!new HMACUtil().VerifyHashedPassword(key, ConfigurationManager.AppSettings["HMACKey"]))//HMAC value is created based on the Key in the config , should match the one provided on the portal
+
+                    if (!HMACUtil.CompareHMAC256(data.uid, ConfigurationManager.AppSettings["HMACKey"], key))//HMAC value is created based on the Key in the config , should match the one provided on the portal
                     {
                         return ReturnUnAuthorized();
                     }
 
                     //IF AUTHORIZED PROCESS DATA. 
                     //WRITE RECIEVED DATA TO A FILE.  
-                    string time = DateTime.Now.ToString("yyyyMMddhhmmssff");
-                    string path =
-                        HttpContext.Current.Server.MapPath("~/App_Data/" + time + "post.txt");
+                    var time = DateTime.Now.ToString("yyyyMMddhhmmssff");
+                    var path =
+                        HttpContext.Current.Server.MapPath($"~/App_Data/{time}post.txt");
                     File.WriteAllText(path, JsonConvert.SerializeObject(data));
                     var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) //SEND STATUS 200 MESSAGE
                     {
